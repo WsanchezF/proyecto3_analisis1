@@ -1,0 +1,130 @@
+<!DOCTYPE HTML>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Transferencia a terceros | Banco de Guatemala</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&family=Roboto:wght@100&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.1.3/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/6.1.0/css/all.min.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+</head>
+<body class="d-flex flex-column h-100">
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <div class="container">
+            <a th:href="@{/transfer-module}" class="btn-back">
+                <i class="fa fa-3x fa-arrow-circle-left"></i>
+            </a>
+
+            <div class="inner-logo">
+                <img alt="Banguat" th:src="@{/img/logo_banguat_final.png}" title="Banguat">
+                &nbsp;
+                <a th:href="@{/logout}" class="btn btn-outline-danger">
+                    <i class="fa fa-sign-out"></i>
+                    &nbsp;
+                    Salir
+                </a>
+            </div>
+        </div>
+    </nav>
+</header>
+
+
+<!-- Begin page content -->
+<main class="flex-shrink-1">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-4"></div>
+            <div class="col-lg-4">
+                <h1>Transferencia a terceros</h1>
+                <br><br>
+
+                <form action="" class="form">
+                    <input id="amount" type="number" class="form-control" placeholder="Monto a transferir" min="0">
+                    <br>
+                    <label for="from-account">Origen</label>
+                    <select id="from-account" class="form-control">
+                        <option value="">---</option>
+                        <option th:each="account : ${myAccounts}" th:value="${account.id}" th:text="${account.identifier}"></option>
+                    </select>
+                    <br>
+                    <label for="to-account">Destino</label>
+                    <select id="to-account" class="form-control">
+                        <option value="">---</option>
+                        <option th:each="account : ${bankAccounts}" th:value="${account.id}" th:text="${account.identifier}"></option>
+                    </select>
+                    <br>
+                    <a th:href="@{/transfer-module/third-party/transfer}" class="btn btn-primary btn-transfer">
+                        <i class="fa fa-money-bill-transfer"></i>
+                        &nbsp;
+                        Transferir
+                    </a>
+                </form>
+            </div>
+            <div class="col-lg-4"></div>
+        </div>
+    </div>
+</main>
+
+
+
+<script type="text/javascript" th:src="@{/webjars/jquery/3.6.0/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/webjars/bootstrap/5.1.3/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/webjars/font-awesome/6.1.0/js/all.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/main.js}"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.btn-transfer').on('click', function (e) {
+            e.preventDefault();
+
+            let $button = $(this);
+            let amount = $('#amount').val();
+            let from = $('#from-account').val();
+            let to = $('#to-account').val();
+
+            if (amount === '') {
+                alert('Ingrese un monto a transferir');
+                return;
+            }
+
+            if (from === '') {
+                alert('Seleccione una cuenta a debitar');
+                return;
+            }
+
+            if (to === '') {
+                alert('Seleccione una cuenta a acreditar');
+                return;
+            }
+
+            if (from === to) {
+                alert('Cuenta de origen y destino no pueden ser la misma.');
+                return;
+            }
+
+            if (confirm("¿Desea realizar esta transferencia?")) {
+                $.ajax({
+                    url: $button.attr('href'),
+                    type: 'GET',
+                    data: {
+                        amount: amount,
+                        from_id: from,
+                        to_id: to,
+                    },
+                    success: function () {
+                        window.location = window.location;
+                    },
+                    error: function (xhr) {
+                        alert('Hubo un error al realizar la transferencia: ' + xhr['responseJSON'].message);
+                    }
+                });
+            }
+
+        });
+    });
+</script>
+</body>
+</html>

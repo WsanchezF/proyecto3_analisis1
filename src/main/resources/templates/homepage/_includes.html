@@ -1,0 +1,43 @@
+<nav th:fragment="header" class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <div class="container">
+        <span class="text-white">Tipo de cambio: Dolar $<span class="exchange-rate-usd">---</span> Euro €<span class="exchange-rate-eur">---</span></span>
+    </div>
+</nav>
+
+<nav th:fragment="header-with-back" class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <div class="container">
+        <a th:href="@{/}" class="btn-back">
+            <i class="fa fa-3x fa-arrow-circle-left"></i>
+        </a>
+
+        <span class="text-white">Tipo de cambio: Dolar $<span class="exchange-rate-usd">---</span> Euro €<span class="exchange-rate-eur">---</span></span>
+    </div>
+</nav>
+
+<nav th:fragment="inner-header" class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <div class="container">
+        <a th:href="@{/}" class="btn-back">
+            <i class="fa fa-3x fa-arrow-circle-left"></i>
+        </a>
+
+        <div class="inner-logo">
+            <img alt="Banguat" th:src="@{/img/logo_banguat_final.png}" title="Banguat">
+            &nbsp;
+            <a th:href="@{/logout}" class="btn btn-outline-danger">
+                <i class="fa fa-sign-out"></i>
+                &nbsp;
+                Salir
+            </a>
+        </div>
+    </div>
+</nav>
+
+
+<div id="banner" th:fragment="banner">
+    <div class="logo">
+        <a th:href="@{/}">
+            <img alt="Banguat" th:src="@{/img/logo_banguat_final.png}" title="Banguat">
+        </a>
+    </div>
+    <div class="container"></div>
+</div>

@@ -1,0 +1,70 @@
+<!DOCTYPE HTML>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Contacto | Banco de Guatemala</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&family=Roboto:wght@100&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.1.3/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/6.1.0/css/all.min.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+</head>
+<body class="d-flex flex-column h-100">
+<header th:insert="homepage/_includes :: header-with-back">...</header>
+<div th:replace="homepage/_includes :: banner"></div>
+
+<!-- Begin page content -->
+<main class="flex-shrink-0">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-lg-6">
+                <div class="programmer">
+                    <img th:src="@{/img/idea.png}" alt="Idea">
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div id="security-section">
+                    <h6>Contacto o sugerencia</h6>
+
+                    <form method="post" th:action="@{/contact-us}" th:object="${contact}" novalidate>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon-email">
+                                <i class="fa fa-envelope"></i>
+                            </span>
+                            <input th:field="*{email}"  type="email" class="form-control" th:classappend="${not #lists.isEmpty(#fields.errors('email'))} ? is-invalid" placeholder="Email" required autofocus>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon-name">
+                                <i class="fa fa-user"></i>
+                            </span>
+                            <input th:field="*{fullName}" type="text" class="form-control" th:classappend="${not #lists.isEmpty(#fields.errors('fullName'))} ? is-invalid" placeholder="Nombre" required>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></div>
+                        </div>
+
+                        <textarea th:field="*{text}" class="form-control" th:classappend="${not #lists.isEmpty(#fields.errors('text'))} ? is-invalid" placeholder="Observación o sugerencia" required rows="7"></textarea>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('text')}" th:errors="*{text}"></div>
+                        <br>
+
+                        <button type="submit" class="btn col-lg-12" value="Submit">
+                            Enviar comentario
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<script type="text/javascript" th:src="@{/webjars/jquery/3.6.0/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/webjars/bootstrap/5.1.3/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/webjars/font-awesome/6.1.0/js/all.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/main.js}"></script>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE HTML>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Pago de prestamos | Banco de Guatemala</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&family=Roboto:wght@100&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.1.3/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/6.1.0/css/all.min.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+</head>
+<body class="d-flex flex-column h-100">
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <div class="container">
+            <a th:href="@{/payment-module}" class="btn-back">
+                <i class="fa fa-3x fa-arrow-circle-left"></i>
+            </a>
+
+            <div class="inner-logo">
+                <img alt="Banguat" th:src="@{/img/logo_banguat_final.png}" title="Banguat">
+                &nbsp;
+                <a th:href="@{/logout}" class="btn btn-outline-danger">
+                    <i class="fa fa-sign-out"></i>
+                    &nbsp;
+                    Salir
+                </a>
+            </div>
+        </div>
+    </nav>
+</header>
+
+
+<!-- Begin page content -->
+<main class="flex-shrink-1">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1>Pago de prestamos</h1>
+                <div th:if="${#lists.size(loans) < 3}">
+                    <a th:href="@{/payment-module/loan-payment/new}" class="btn btn-primary">
+                        Solicitar prestamo
+                    </a>
+                </div>
+                <div th:if="not ${#lists.size(loans) < 3}" class="text-warning">
+                    <i class="fa fa-warning"></i>&nbsp; Gastar más de lo que se gana nunca ha sido buena idea
+                </div>
+                <br><br>
+
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Moneda</th>
+                        <th>Number</th>
+                        <th>Balance</th>
+                        <th style="width: 200px;">Monto</th>
+                        <th>Cuenta</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="loan: ${loans}">
+                        <td>GTQ</td>
+                        <td th:text="${loan.number}" />
+                        <td th:text="${loan.balance}" />
+                        <td>
+                            <input class="form-control amount-input" type="number" min="0" th:max="${#numbers.formatDecimal(loan.balance, 0, 0)}">
+                        </td>
+                        <td>
+                            <select class="form-control account-input">
+                                <option value="">---</option>
+                                <option th:each="account : ${accounts}" th:value="${account.id}" th:text="${account.identifier}"></option>
+                            </select>
+                        </td>
+                        <td>
+                            <a th:href="@{/payment-module/loan-payment/pay/{loanId}(loanId=${loan.id})}" class="btn btn-primary btn-pay" th:attr="data-loan=${loan.id}">
+                                <i class="fa fa-money-bill"></i>
+                                &nbsp;
+                                Realizar pago
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</main>
+
+
+
+<script type="text/javascript" th:src="@{/webjars/jquery/3.6.0/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/webjars/bootstrap/5.1.3/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/webjars/font-awesome/6.1.0/js/all.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/main.js}"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.btn-pay').on('click', function (e) {
+            e.preventDefault();
+            let $button = $(this);
+            let loanId = $button.data('loan');
+            let amount = $button.closest('tr').find('.amount-input').val();
+            let accountId = $button.closest('tr').find('.account-input').val();
+
+            if (amount === '' || accountId === '') {
+                alert('Seleccione el monto y la cuenta a debitar.');
+
+                return;
+            }
+
+            if (confirm("Desea efectuar el debito desde esta cuenta?")) {
+                console.log(loanId, amount, accountId);
+
+                $.ajax({
+                    url: $button.attr('href'),
+                    type: 'GET',
+                    data: {
+                        amount: amount,
+                        account_id: accountId,
+                    },
+                    success: function () {
+                        window.location = window.location;
+                    },
+                    error: function (xhr) {
+                        alert('Hubo un error al realizar el pago: ' + xhr['responseJSON'].message);
+                    }
+                });
+            }
+        });
+    });
+</script>
+</body>
+</html>
